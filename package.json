@@ -1,0 +1,30 @@
+{
+  "name": "simple-token-contract",
+  "version": "1.0.0",
+  "description": "A simple Solidity token contract with Hardhat",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "test:gas": "REPORT_GAS=true npx hardhat test",
+    "node": "npx hardhat node",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "clean": "npx hardhat clean"
+  },
+  "keywords": [
+    "solidity",
+    "hardhat",
+    "ethereum",
+    "smart-contracts",
+    "token"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.17.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
