@@ -25,19 +25,26 @@ module.exports = {
       chainId: 11155111,
       gasPrice: "auto",
       gas: "auto"
-    },
-    // 可以添加其他网络
-    // mainnet: {
-    //   url: process.env.MAINNET_URL || "",
-    //   accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    //   chainId: 1,
-    // },
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
+  // 保留etherscan配置 - 用于Sepolia合约验证！
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      sepolia: process.env.ETHERSCAN_API_KEY
+    },
+    customChains: [
+      {
+        network: "sepolia",
+        chainId: 11155111,
+        urls: {
+          apiURL: "https://api-sepolia.etherscan.io/api",
+          browserURL: "https://sepolia.etherscan.io"
+        }
+      }
+    ]
   },
 };
