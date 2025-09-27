@@ -9,14 +9,20 @@
     "test:gas": "REPORT_GAS=true npx hardhat test",
     "node": "npx hardhat node",
     "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
-    "clean": "npx hardhat clean"
+    "deploy:sepolia": "npx hardhat run scripts/deploy-sepolia.js --network sepolia",
+    "verify:sepolia": "npx hardhat run scripts/verify.js --network sepolia",
+    "verify:contract": "npx hardhat verify --network sepolia",
+    "clean": "npx hardhat clean",
+    "setup": "cp .env.example .env && echo 'Please edit .env file with your configuration'"
   },
   "keywords": [
     "solidity",
     "hardhat",
     "ethereum",
     "smart-contracts",
-    "token"
+    "token",
+    "sepolia",
+    "testnet"
   ],
   "author": "Your Name",
   "license": "MIT",
