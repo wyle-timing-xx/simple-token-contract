@@ -117,3 +117,92 @@ describe("SimpleToken", function () {
       ).to.be.revertedWith("Insufficient allowance");
     });
   });
+
+  describe("Minting", function () {
+    it("Should allow owner to mint tokens", async function () {
+      const mintAmount = ethers.parseEther("100");
+      const initialSupply = await token.totalSupply();
+      
+      await token.mint(addr1.address, mintAmount);
+      
+      expect(await token.balanceOf(addr1.address)).to.equal(mintAmount);
+      expect(await token.totalSupply()).to.equal(initialSupply + mintAmount);
+    });
+
+    it("Should prevent non-owner from minting", async function () {
+      const mintAmount = ethers.parseEther("100");
+      
+      await expect(
+        token.connect(addr1).mint(addr2.address, mintAmount)
+      ).to.be.revertedWith("Only owner can call this function");
+    });
+  });
+
+  describe("Burning", function () {
+    it("Should allow token holders to burn their tokens", async function () {
+      const burnAmount = ethers.parseEther("100");
+      const initialBalance = await token.balanceOf(owner.address);
+      const initialSupply = await token.totalSupply();
+      
+      await token.burn(burnAmount);
+      
+      expect(await token.balanceOf(owner.address)).to.equal(initialBalance - burnAmount);
+      expect(await token.totalSupply()).to.equal(initialSupply - burnAmount);
+    });
+
+    it("Should fail burning more tokens than balance", async function () {
+      const burnAmount = ethers.parseEther("1");
+      
+      await expect(
+        token.connect(addr1).burn(burnAmount)
+      ).to.be.revertedWith("Insufficient balance to burn");
+    });
+  });
+
+  describe("Ownership", function () {
+    it("Should allow owner to transfer ownership", async function () {
+      await token.transferOwnership(addr1.address);
+      expect(await token.owner()).to.equal(addr1.address);
+    });
+
+    it("Should prevent non-owner from transferring ownership", async function () {
+      await expect(
+        token.connect(addr1).transferOwnership(addr2.address)
+      ).to.be.revertedWith("Only owner can call this function");
+    });
+  });
+
+  describe("Events", function () {
+    it("Should emit Transfer event on token transfer", async function () {
+      const transferAmount = ethers.parseEther("50");
+      
+      await expect(token.transfer(addr1.address, transferAmount))
+        .to.emit(token, "Transfer")
+        .withArgs(owner.address, addr1.address, transferAmount);
+    });
+
+    it("Should emit Approval event on token approval", async function () {
+      const approveAmount = ethers.parseEther("100");
+      
+      await expect(token.approve(addr1.address, approveAmount))
+        .to.emit(token, "Approval")
+        .withArgs(owner.address, addr1.address, approveAmount);
+    });
+
+    it("Should emit Mint event on token minting", async function () {
+      const mintAmount = ethers.parseEther("100");
+      
+      await expect(token.mint(addr1.address, mintAmount))
+        .to.emit(token, "Mint")
+        .withArgs(addr1.address, mintAmount);
+    });
+
+    it("Should emit Burn event on token burning", async function () {
+      const burnAmount = ethers.parseEther("100");
+      
+      await expect(token.burn(burnAmount))
+        .to.emit(token, "Burn")
+        .withArgs(owner.address, burnAmount);
+    });
+  });
+});
